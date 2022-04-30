@@ -1,0 +1,743 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+/* Fonts 
+font-family: 'Dancing Script', cursive;
+font-family: 'Poppins', sans-serif;
+*/
+
+/* a minimalist set of CSS resets */
+
+/*
+Theme Colors:
+  --main-color: #eaa023;
+  --dark:#0c1023;
+  --dark-light: #191f3a;
+  --white: #ffffff;
+  --white-light: #c8c8c8;
+*/
+
+/* default to border-box */
+
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+/* adjust typography defaults */
+body {
+/*   margin: 1rem;
+  padding: 15px; */
+  font-family: 'Poppins', sans-serif;
+  font-weight: 300;
+  line-height: 1.5;
+  background: #0c1023;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+}
+
+h6 {
+  font-family: 'Dancing Script', cursive;
+  font-weight: 700;
+}
+
+/* Main and sub nav bars */
+
+justify-content-between{
+  justify-content: space-between;
+}
+.align-items-center{
+  align-items: center;
+}
+.min-vh-100{
+  min-height: 100vh;
+}
+/* images and videos max out at full width */
+img,
+video {
+  height: auto;
+  max-width: 100%;
+}
+
+
+/* Cards */    /*  .order-card-test is used to try and differentiate order page and checkout page cards; some css for cards is currently making horizontal card freak out on checkout page*/
+
+.order-card-test .card-img-top {
+    width: 100%;
+    height: 12vw;
+    object-fit: cover; 
+}
+
+.order-card-test .card {
+  border: 1px solid #c8c8c8 !important;
+  /* Got box shadow and transition code from article; used in conjuction with .card:hover to highlight where the user is */
+  box-shadow: 0 6px 10px rgba(0,0,0,.08), 0 0 6px rgba(0,0,0,.05);
+      transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+
+}
+
+.order-card-test .card:hover { 
+  /* Got code from article; used in conjuction with .card box-shadow and transition code to highlight where the user is */
+  box-shadow: 0 10px 20px rgba(234, 160, 35,.12), 0 4px 8px rgba(234, 160, 35,.06);
+}
+
+
+.order-card-test .card-body {
+  background: #191f3a;
+}
+
+.order-card-test .card-title {
+  color: #ffffff;
+}
+
+.order-card-test .card-text {
+  color: #c8c8c8;
+}
+
+.order-card-test .card-price {
+  color: #eaa023;
+}
+
+/* card radio button formatting */
+
+.btn-outline-secondary {
+  border-color: #eaa023;
+  color: #eaa023;
+}
+
+.btn-outline-secondary:hover {
+  background: #eaa023;
+  color: #ffffff;
+}
+
+/*  Modals */
+
+.modal-header {
+  background: #191f3a;
+  color: #eaa023;
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.modal-body {
+  background: #0c1023;
+}
+
+.modal-body label {
+  color: #ffffff;
+}
+
+.modal-footer {
+  background: #191f3a; 
+}
+
+#disabledCartButton, #disabledDrinkCartButton, #disabledSideCartButton, #addEntreeModal, #addDrinkModal, #addSideModal {
+  background: #eaa023;
+  color: #ffffff;
+}
+
+.tooltip-inner {
+  color: #eaa023;
+  background-color: black;
+}
+
+/* Radio button formatting; got from an article and made some changes */
+
+[type="radio"]:checked,
+[type="radio"]:not(:checked) {
+    position: absolute;
+    left: -9999px;
+}
+[type="radio"]:checked + label,
+[type="radio"]:not(:checked) + label
+{
+    position: relative;
+    padding-left: 25px;
+    cursor: pointer;
+    line-height: 18px;
+    display: inline-block;
+    color: #ffffff;
+    font-size: 16px;
+}
+[type="radio"]:checked + label:before,
+[type="radio"]:not(:checked) + label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #ffffff;
+    border-radius: 100%;
+    background: #ffffff;
+}
+[type="radio"]:checked + label:after,
+[type="radio"]:not(:checked) + label:after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background: #eaa023;
+    position: absolute;
+    top: 2.5px;
+    left: 2.5px;
+    border-radius: 100%;
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+[type="radio"]:not(:checked) + label:after {
+    opacity: 0;
+    -webkit-transform: scale(0);
+    transform: scale(0);
+}
+[type="radio"]:checked + label:after {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+
+/* End of Radio button formatting */
+
+/* Radio and Select Menu Label Formatting */
+.titleLabel {
+  
+  color: #eaa023 !important;
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+/* End of Radio and Slect Menu Label Formatting */
+
+/* Attempt at horizontal card formatting */
+.img-fluid .rounded-start {
+  width: auto;
+  height: auto;
+  object-fit: cover; 
+}
+
+/* checkout button on checkout page; used code from same article from card hover code above */
+
+.btn-checkout {
+  background: #eaa023; 
+  color: black;
+  box-shadow: 0 6px 10px rgba(0,0,0,.08), 0 0 6px rgba(0,0,0,.05);
+      transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+}
+
+.btn-checkout:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+}
+
+/*  End of checkout button code */
+
+/* Used for order success page; button that returns user to home page and clears cart */
+.btn-returnHome {
+  border-radius: 7.5px;
+  font-size: 20px;
+  font-weight: bold;
+  background: #eaa023; 
+  color: #191f3a;
+  box-shadow: 0 6px 10px rgba(0,0,0,.08), 0 0 6px rgba(0,0,0,.05);
+      transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+}
+
+.btn-returnHome:hover {
+  color: #ffffff;
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+}
+
+/*  Other page CSS */ 
+
+section {
+  /* Play with margin and padding here rather than body so footer can display as needed */
+  margin: 1rem;
+  padding: 15px;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+section .cart {
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+}
+section .checkout {
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* Checkout page */
+
+li {
+  margin-bottom: 10px;
+}
+
+#checkout-img-height, #checkout-content-height {
+  height: 210px;
+  overflow: hidden;
+}
+
+#checkout-options-list-height {
+  height: 102px;
+  overflow: auto;
+}
+
+
+/*---------------
+  Header
+-----------------*/
+.header{
+  padding: 12px 0;
+  position: fixed; 
+  left: 0;
+  top: 0;
+  z-index: 99;
+  width: 100%;
+  background-color: #191f3a;
+  box-shadow: 0 0 15px rgba(0,0,0,0.25);
+}
+/* Commented out code below controls the nav bar background appearing after scrolling; prefer to not have that on order/checkout page  */
+/* .header::before{
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #191f3a;
+  box-shadow: 0 0 15px rgba(0,0,0,0.25);
+  z-index: -1;
+  transition: transform 0.5s ease;
+  transform: translateY(-100%);
+} */
+/* .header.sticky::before{
+  transform: translateY(0%);
+} */
+.header .logo{
+  min-height: 34px;
+  display: inline-block;
+  align-items: center;
+  padding: 0 15px;
+  
+}
+.header .nav-toggler{
+  height: 34px;
+  width: 44px;
+  margin-right: 15px;
+  cursor: pointer;
+  border:none;
+  background-color: transparent;
+  display: inline-block;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding-right: 15px;
+/*   z-index: 1; */
+}
+.header .nav-toggler.active{
+  position: absolute;
+  right:0;
+  padding-right: 10px;
+  z-index: 1;
+  transition: all 0.5s ease;
+  transform: translateX(-200px);
+}
+.header .nav-toggler span{
+  height: 2px;
+  width: 30px;
+  display: block;
+background-color: #ffffff;
+  position: relative;
+}
+.header .nav-toggler.active span{
+  background-color: transparent;
+  transition: background-color 0.5s ease;
+}
+.header .nav-toggler span::before,
+.header .nav-toggler span::after{
+  content: '';
+  position: absolute;
+  left:0;
+  top:0;
+  height: 100%;
+  width:100%;
+  background-color: #ffffff;
+}
+.header .nav-toggler span::before{
+  transform: translateY(-8px);
+}
+
+.header .nav-toggler.active span::before{
+  transform: rotate(45deg);
+  transition: transform 0.5s ease;
+}
+
+.header .nav-toggler span::after{
+  transform: translateY(8px);
+}
+
+.header .nav-toggler.active span::after{
+  transform: rotate(-45deg);
+  transition: transform 0.5s ease;
+}
+  
+.header .nav{
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 280px;
+  background-color: #191f3a;
+  box-shadow: 0 0 15px rgba(0,0,0,0.25);
+  overflow-y: auto;
+  padding:80px 0 40px;
+  transition: transform 0.5s ease;
+  transform: translateX(100%);
+}
+
+.header .nav.open{
+  transform: translateX(0%);
+}
+
+.header .nav ul li a{
+  display: block;
+  font-size: 25px;
+  color: #ffffff;
+  padding:10px 30px;
+  text-transform: capitalize;
+  transition: color 0.3s ease;
+}
+.header .nav ul li a:hover{
+  color: #eaa023;
+}
+
+.header a {
+  text-decoration:none;
+}
+
+.header ul {
+  list-style: none;
+}
+
+/* Successful order page */
+
+section .order-success {
+  width: 50%;
+  height: 50%;
+}
+
+.order-success {
+  padding: 30px;
+  width: 75%;
+  color: #ffffff;
+}
+
+.page-subheader {
+  width: 95%;
+  margin: 0 auto;
+  text-align: center;
+  background-color: #0c1023;
+  border-radius: 10px;
+  border: 2px solid #191f3a;
+  color: #ffffff;
+  padding: 1vh 0;
+  
+}
+.page-item-heading{
+  font-family: 'Poppins', sans-serif;
+  color: #eaa023;
+  font-weight:bold;
+  font-size: 4rem;
+  text-transform: uppercase;
+}
+
+.page-header {
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  background-color: #eaa023;
+  border-radius: 10px;
+  border: 2px solid #191f3a;
+  color: #ffffff;
+  padding: 1vh 0;
+}
+
+.page-header .page-item-heading{
+  font-family: 'Poppins', sans-serif;
+  color: #0c1023;
+  font-weight:bold;
+  font-size: 6rem;
+  text-transform: uppercase;
+}
+
+/* Test for box around order sections (currently in use for entrees); issue with cards not centering in box and right side has more space than left, playing with width and left padding seems to be a temp fix */
+.orderVisualContainer {
+  width: 90%;
+  margin: 0 auto;
+  background-color: #0c1023;
+  border-radius: 10px;
+  border: 2px solid #191f3a;
+  padding-top: 2vh;
+  padding-right: 1vh;
+  padding-bottom: 1vh;
+  padding-left: 3vh;
+}
+/* Test for checkout section box */
+.checkoutVisualContainer {
+  width: 90%;
+  margin: 0 auto;
+  background-color: #0c1023;
+  border-radius: 10px;
+  border: 2px solid #191f3a;
+  padding-top: 2vh;
+  padding-right: 1vh;
+  padding-bottom: 1vh;
+  padding-left: 4vh;
+}
+
+/*-------------------------------
+
+Footer area
+
+-----------------------------*/
+
+.footer{
+  padding:80px 0;
+  background-image: url('https://cdn.glitch.me/1cf6b956-b6ce-49c7-949f-2e012f4dfeb5%2Fpexels-karolina-grabowska-4033634.jpg?v=1635439156631');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  position: relative;
+  z-index: 1;
+    
+}
+
+.footer::before{
+  content: '';
+  position: absolute;
+  left:0;
+  top:0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0,0,0,0.25);
+  z-index: -1;
+}
+
+.center{
+  padding:80px 0;
+  background-image: url('https://cdn.glitch.me/1cf6b956-b6ce-49c7-949f-2e012f4dfeb5%2Fpexels-pixabay-315755.jpg?v=1635439139544');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  }
+
+.center::before{
+  content: '';
+  position: absolute;
+  left:0;
+  top:0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0,0,0,0.25);
+  z-index: -1;
+}
+
+.footer-distributed{
+	background: #fff;
+	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);
+  /*background-image: url('https://cdn.glitch.com/1cf6b956-b6ce-49c7-949f-2e012f4dfeb5%2Fhome-bg.jpg?v=1628107512053');*/
+  background-image: url('https://cdn.glitch.com/1cf6b956-b6ce-49c7-949f-2e012f4dfeb5%2Fhome-bg.jpg?v=1628107512053');
+	box-sizing: border-box;
+	width: 100%;
+	text-align: left;
+	font: bold 16px sans-serif;
+  font-color: black;
+	padding: 55px 50px;
+}
+
+.footer-distributed .footer-left,
+.footer-distributed .footer-center,
+.footer-distributed .footer-right{
+	display: inline-block;
+	vertical-align: top;
+}
+
+/* Footer left */
+
+.footer-distributed .footer-left{
+	width: 40%;
+}
+
+/* The company logo */
+
+.footer-distributed h3{
+	color:  #ffffff;
+	font: normal 36px 'Open Sans', cursive;
+	margin: 0;
+}
+
+.footer-distributed h3 span{
+	color:  lightseagreen;
+}
+
+/* Footer links */
+
+.footer-distributed .footer-links{
+	color:  #ffffff;
+	margin: 20px 0 12px;
+	padding: 0;
+}
+
+.footer-distributed .footer-links a{
+	display:inline-block;
+	line-height: 1.8;
+  font-weight:400;
+	text-decoration: none;
+	color:  inherit;
+}
+
+.footer-distributed .footer-company-name{
+	color:  #222;
+	font-size: 14px;
+	font-weight: normal;
+	margin: 0;
+}
+
+/* Footer Center */
+
+.footer-distributed .footer-center{
+	width: 35%;
+}
+
+.footer-distributed .footer-center i{
+	background-color:  #33383b;
+	color: #ffffff;
+	font-size: 25px;
+	width: 38px;
+	height: 38px;
+	border-radius: 50%;
+	text-align: center;
+	line-height: 42px;
+	margin: 10px 15px;
+	vertical-align: middle;
+}
+
+.footer-distributed .footer-center i.fa-envelope{
+	font-size: 17px;
+	line-height: 38px;
+}
+
+.footer-distributed .footer-center p{
+	display: inline-block;
+	color: #ffffff;
+  font-weight:400;
+	vertical-align: middle;
+	margin:0;
+}
+
+.footer-distributed .footer-center p span{
+	display:block;
+	font-weight: normal;
+	font-size:14px;
+	line-height:2;
+}
+
+.footer-distributed .footer-center p a{
+	color:  lightseagreen;
+	text-decoration: none;;
+}
+
+.footer-distributed .footer-links a:before {
+  content: "|";
+  font-weight:300;
+  font-size: 20px;
+  left: 0;
+  color: #fff;
+  display: inline-block;
+  padding-right: 5px;
+}
+
+.footer-distributed .footer-links .link-1:before {
+  content: none;
+}
+
+/* Footer Right */
+
+.footer-distributed .footer-right{
+	width: 20%;
+}
+
+.footer-distributed .footer-company-about{
+	line-height: 20px;
+	color:  white;
+	font-size: 13px;
+	font-weight: normal;
+	margin: 0;
+}
+
+.footer-distributed .footer-company-about span{
+	display: block;
+	color:  #ffffff;
+	font-size: 14px;
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+
+.footer-distributed .footer-icons{
+	margin-top: 25px;
+}
+
+.footer-distributed .footer-icons a{
+	display: inline-block;
+	width: 35px;
+	height: 35px;
+	cursor: pointer;
+	background-color:  #33383b;
+	border-radius: 2px;
+
+	font-size: 20px;
+	color: #ffffff;
+	text-align: center;
+	line-height: 35px;
+
+	margin-right: 3px;
+	margin-bottom: 5px;
+}
+
+/* If you don't want the footer to be responsive, remove these media queries */
+
+@media (max-width: 880px) {
+
+	.footer-distributed{
+		font: bold 14px sans-serif;
+	}
+
+	.footer-distributed .footer-left,
+	.footer-distributed .footer-center,
+	.footer-distributed .footer-right{
+		display: block;
+		width: 100%;
+		margin-bottom: 40px;
+		text-align: center;
+	}
+
+	.footer-distributed .footer-center i{
+		margin-left: 0;
+	}
+}

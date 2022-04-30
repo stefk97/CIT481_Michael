@@ -1,0 +1,782 @@
+ <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CIT480 Shopping Cart Test</title>
+    
+    <!-- Import Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!-- Import Styles -->
+    <link rel="stylesheet" href="order-checkout.css" />
+    <!-- Import Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- Import Stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <!-- Import Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Import Font Awesome (footer) -->
+    <link rel="stylesheet" href="css/font-awesome.css">
+    <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+    
+  </head>
+  <body>
+
+    <div id="app"> <!-- Start of Vue/App -->
+      
+      <!-- Imported from Shahrad Site -->
+      <!-- header start -->
+      <header class="header">
+        <div class="container">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="logo">
+            <a href="#"><img src="https://cdn.glitch.com/1cf6b956-b6ce-49c7-949f-2e012f4dfeb5%2F2108_logo1.png?v=1633275198243" alt="logo"></a>
+            </div>
+            <button type="button" class="nav-toggler">
+              <span></span>
+            </button>
+            <nav class="nav">
+            <ul>
+              <li class="nav-item"><a href="index.html#home">home</a></li>
+              <li class="nav-item"><a href="index.html#about">about</a></li>
+              <li class="nav-item"><a href="index.html#our-menu">our menue</a></li>
+              <li class="nav-item"><a href="index.html#testimonials">testimonials</a></li>
+              <li class="nav-item"><a href="index.html#team">team</a></li>
+              <li class="nav-item"><a href="index.html#contact">contact us</a></li>
+              <li class="nav-item"><a href="order.html">Order now</a></li>
+              <li class="nav-item"><a href="checkout.html">Checkout</a></li>
+            </ul>
+            </nav>
+          </div>
+        </div> 
+      </header>
+      <!---header end--->     
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      
+      <section class="Food">
+
+        <div class="shadow page-header">
+          <h2 class="page-item-heading">Order Now</h2>
+        </div> 
+        
+        <br><br>
+        
+        <button type="button" class="btn-checkout btn btn-lg d-flex justify-content-between" v-on:click="logIn">Login Test</button>
+        
+        <br><br>
+        
+        <!-- Header for Entrees -->
+        <div class="shadow page-subheader">
+          <h2 class="page-item-heading">Entrees</h2>
+          <p>Our various entree options are guaranteed to fill your cravings!</p>
+        </div> 
+        <br>
+        <div class="shadow orderVisualContainer">
+          <div class="row align-items-center">
+            <div v-for="(entree, index) in entrees" :key="index" class="col-sm">
+              <div class="order-card-test"> <!-- Order card test -->
+                <div class="card mb-3" style="width: 18rem;">
+                  <img v-bind:src="entree.image" class="card-img-top" alt="...">
+                  <!-- Card Body Content-->
+                  <div class="card-body">
+                    <h5 class="card-title">{{ entree.name }}
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ entree.calories }}</h6>
+                    <p class="card-text">{{ entree.description }}</p>
+                    <div class="d-flex justify-content-between">
+                      <h5 class="card-text card-price">{{ entree.price }}</h5>
+                      <button type="button" class="btn btn-sm btn-block btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#entreeModal" v-on:click="setModalEntree(entree)">Edit & Add</button>
+                    </div>
+                  </div>
+
+                  <!-- Start of Modal from Bootstrap documentation -->
+
+                  <div class="modal fade" id="entreeModal" tabindex="-1" aria-labelledby="entreeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="entreeModalLabel">{{ modalEntree.name }}</h5>
+                          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" v-on:click="resetItem(entree, modalEntree)"></button>
+                        </div>
+                        <div class="modal-body">
+                          <!-- Start of Modal body content -->
+
+                            <!-- 
+                              - Unique properties/options for an item in a v-for loop seem to require a workaround as the modal doesn't seem to loop the same as the cards 
+                              - Modal for all 3 food items were showing the unique option that was only supposed to show on the modal for food 1
+                              - Workaround was creating the "setModalFood (product)" function which gets called when they hit button on card to open modal (customize & order                             now)
+                                - This function simply passes the current food option in the loop to the function and sets an empty object equal to the passed food object
+                                - This basically allows the modals to loop similar to the cards
+                              -->
+
+                            <!-- Unique option for entree1 - Pizza -->
+                            <div v-if="modalEntree.name == 'Pizza'">
+
+                              <!-- Radio option for SIZE -->
+                              <p>
+                                <label for="size" class="titleLabel">Size:</label><br>
+                                <input class="form-check-input" type="radio" id="smallPizza" value="small" v-model="entree.options.size" v-on:change="entreeValidation(entree, modalEntree)">
+                                <label class="form-check-label" for="smallPizza">Small</label>
+                                <br>
+                                <input class="form-check-input" type="radio" id="mediumPizza" value="medium" v-model="entree.options.size" v-on:change="entreeValidation(entree, modalEntree)">
+                                <label class="form-check-label" for="mediumPizza">Medium</label>
+                                <br>
+                                <input class="form-check-input" type="radio" id="largePizza" value="large" v-model="entree.options.size" v-on:change="entreeValidation(entree, modalEntree)">
+                                <label class="form-check-label" for="largePizza">Large</label>
+                              </p>
+
+                              <!-- option for TOPPINGS -->
+                              <p>
+                                <label for="toppings" class="titleLabel">Toppings:</label><br>
+                                <select class="form-select form-select-sm" style="width:auto;" id="toppings" v-model="entree.options.toppings" v-on:change="entreeValidation(entree, modalEntree)">
+                                  <option value="null" disabled hidden>Please select...</option>
+                                  <option>Plain Cheese</option>
+                                  <option>Pepperoni</option>
+                                  <option>Sausage</option>
+                                  <option>Both Pepperoni and Sausage</option>
+                                  <option>Half Cheese, Half Pepperoni</option>
+                                  <option>Half Cheese, Half Sausage</option>
+                                  <option>Half Pepperoni, Half Sausage</option>
+                                </select>
+                              </p>
+
+                              <!-- option for extras -->
+                              <p>
+                                <label for="extra" class="titleLabel">Extras:</label><br>
+                                <select class="form-select form-select-sm" style="width:auto;" id="extras" v-model="entree.options.extras" v-on:change="entreeValidation(entree, modalEntree)">
+                                  <option value="null" disabled hidden>Please select...</option>
+                                  <option>Parmesan Cheese Packets</option>
+                                  <option>Pepper Flakes Packets</option>
+                                  <option>Both</option>
+                                  <option>None</option>
+                                </select>
+                              </p>
+
+                            </div> 
+
+                            <!-- End of entree 1 - pizza options -->
+
+                          <!-- Unique option for food 2 -->
+                            <div v-if="modalEntree.name == 'Western Burger'">
+
+                              <!-- Radio option for onions -->
+                              <p>
+                                <label for="onions" class="titleLabel">Onions:</label><br>
+                                <input class="form-check-input" type="radio" id="keepOnions" value="Keep Onions" v-model="entree.options.onions" v-on:change="entreeValidation(entree, modalEntree)">
+                                <label class="form-check-label" for="keepOnions">Keep Onions</label>
+                                <br>
+                                <input class="form-check-input" type="radio" id="removeOnions" value="Remove Onions" v-model="entree.options.onions" v-on:change="entreeValidation(entree, modalEntree)">
+                                <label class="form-check-label" for="removeOnions">Remove Onions</label>
+                              </p>
+
+                              <!-- Radio option for cheese -->
+                              <p>
+                                <label for="cheese" class="titleLabel">Cheese:</label><br>
+                                <input class="form-check-input" type="radio" id="keepCheese" value="Keep Cheese" v-model="entree.options.cheese" v-on:change="entreeValidation(entree, modalEntree)">
+                                <label class="form-check-label" for="keepCheese">Keep Cheese</label>
+                                <br>
+                                <input class="form-check-input" type="radio" id="removeCheese" value="Remove Cheese" v-model="entree.options.cheese" v-on:change="entreeValidation(entree, modalEntree)">
+                                <label class="form-check-label" for="removeCheese">Remove Cheese</label>
+                              </p>
+
+                              <!-- Radio option for coleslaw -->
+                              <p>
+                                <label for="coleslaw" class="titleLabel">Coleslaw:</label><br>
+                                <input class="form-check-input" type="radio" id="keepColeslaw" value="Keep Coleslaw" v-model="entree.options.coleslaw" v-on:change="entreeValidation(entree, modalEntree)">
+                                <label class="form-check-label" for="keepColeslaw">Keep Cheese</label>
+                                <br>
+                                <input class="form-check-input" type="radio" id="removeColeslaw" value="Remove Coleslaw" v-model="entree.options.coleslaw" v-on:change="entreeValidation(entree, modalEntree)">
+                                <label class="form-check-label" for="removeColeslaw">Remove Coleslaw</label>
+                              </p>
+
+                              <!-- Radio option for sauce -->
+                              <p>
+                                <label for="sauce" class="titleLabel">Sauce:</label><br>
+                                <input class="form-check-input" type="radio" id="keepSauce" value="Keep Sauce" v-model="entree.options.sauce" v-on:change="entreeValidation(entree, modalEntree)">
+                                <label class="form-check-label" for="keepSauce">Keep Sauce</label>
+                                <br>
+                                <input class="form-check-input" type="radio" id="removeSauce" value="Remove Sauce" v-model="entree.options.sauce" v-on:change="entreeValidation(entree, modalEntree)">
+                                <label class="form-check-label" for="removeSauce">Remove Sauce</label>
+                              </p>
+
+                            </div>
+                          <!-- End of entree 2 - western burger -->
+
+                          <!-- Unique option for Tacos -->
+                          <div v-if="modalEntree.name == 'Tacos'">
+
+                            <!-- Radio option for meat -->
+                            <p>
+                              <label for="meat" class="titleLabel">Meat:</label><br>
+                              <input class="form-check-input" type="radio" id="chicken" value="Chicken" v-model="entree.options.meat" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="chicken">Chicken</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="steak" value="Steak" v-model="entree.options.meat" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="steak">Steak</label>
+                            </p>
+
+                            <!-- Radio option for shell -->
+                            <p>
+                              <label for="shell" class="titleLabel">Shell:</label><br>
+                              <input class="form-check-input" type="radio" id="soft" value="Soft" v-model="entree.options.shell" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="soft">Soft</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="hard" value="Hard" v-model="entree.options.shell" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="hard">Hard</label>
+                            </p>
+
+                            <!-- Radio option for rice -->
+                            <p>
+                              <label for="rice" class="titleLabel">Rice:</label><br>
+                              <input class="form-check-input" type="radio" id="white" value="White" v-model="entree.options.rice" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="white">White</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="brown" value="Brown" v-model="entree.options.rice" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="brown">Brown</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="none" value="None" v-model="entree.options.rice" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="none">None</label>
+                            </p>
+
+                            <!-- Radio option for beans -->
+                            <p>
+                              <label for="beans" class="titleLabel">Beans:</label><br>
+                              <input class="form-check-input" type="radio" id="black" value="Black" v-model="entree.options.beans" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="black">Black</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="pinto" value="Pinto" v-model="entree.options.beans" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="pinto">Pinto</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="noBeans" value="None" v-model="entree.options.beans" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="noBeans">None</label>
+                            </p>
+
+                            <!-- option for Salsa -->
+                              <p>
+                                <label for="salsa" class="titleLabel">Salsa:</label><br>
+                                <select class="form-select form-select-sm" style="width:auto;" id="salsa" v-model="entree.options.salsa" v-on:change="entreeValidation(entree, modalEntree)">
+                                  <option value="null" disabled hidden>Please select...</option>
+                                  <option>Mild</option>
+                                  <option>Medium</option>
+                                  <option>Hot</option>
+                                  <option>None</option>
+                                </select>
+                              </p>
+                          </div> 
+                          <!-- End of Tacos -->
+
+                          <!-- Unique option for Chicken Alfredo -->
+                          <div v-if="modalEntree.name == 'Chicken Alfredo'">
+
+                            <!-- Radio option for sauce -->
+                            <p>
+                              <label for="sauce" class="titleLabel">Sauce:</label><br>
+                              <input class="form-check-input" type="radio" id="keepAlfredoSauce" value="Keep Sauce" v-model="entree.options.sauce" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="keepAlfredoSauce">Keep Sauce</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="noSauce" value="None" v-model="entree.options.sauce" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="noSauce">None</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="sideSauce" value="On the side" v-model="entree.options.sauce" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="sideSauce">On the side</label>
+                            </p>
+
+                          </div>
+                          <!-- End of Chicken Alfredo-->
+
+                          <!-- Unique option for Bone-in Ribeye Steak -->
+                          <div v-if="modalEntree.name == 'Bone-in Ribeye Steak'">
+
+                            <!-- Radio option for doneness -->
+                            <p>
+                              <label for="doneness" class="titleLabel">Doneness:</label><br>
+                              <select class="form-select form-select-sm" style="width:auto;" id="doneness" v-model="entree.options.doneness" v-on:change="entreeValidation(entree, modalEntree)">
+                                <option value="null" disabled hidden>Please select...</option>
+                                <option>Rare</option>
+                                <option>Medium-Rare</option>
+                                <option>Medium</option>
+                                <option>Medium-Well</option>
+                                <option>Well-Done</option>
+                              </select>
+                            </p>
+                          </div>
+                          <!-- End of Bone-in Ribeye Steak -->
+
+                          <!-- Unique option for Chicken Caesar Salad -->
+                          <div v-if="modalEntree.name == 'Chicken Caesar Salad'">
+
+                            <!-- Radio option for croutons -->
+                            <p>
+                              <label for="croutons" class="titleLabel">Croutons:</label><br>
+                              <input class="form-check-input" type="radio" id="keepCroutons" value="Keep" v-model="entree.options.croutons" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="keepCroutons">keep</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="removeCroutons" value="Remove" v-model="entree.options.croutons" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="removeCroutons">Remove</label>
+                            </p>
+
+                            <!-- Radio option for cheese -->
+                            <p>
+                              <label for="cheese" class="titleLabel">Cheese:</label><br>
+                              <input class="form-check-input" type="radio" id="keepCaesarCheese" value="Keep" v-model="entree.options.cheese" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="keepCaesarCheese">keep</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="removeCaesarCheese" value="Remove" v-model="entree.options.cheese" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="removeCaesarCheese">Remove</label>
+                            </p>
+
+                            <!-- Radio option for dressing -->
+                            <p>
+                              <label for="dressing" class="titleLabel">Dressing:</label><br>
+                              <input class="form-check-input" type="radio" id="keepDressing" value="Keep" v-model="entree.options.dressing" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="keepDressing">keep</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="removeDressing" value="Remove" v-model="entree.options.dressing" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="removeDressing">Remove</label>
+                               <br>
+                              <input class="form-check-input" type="radio" id="sideDressing" value="On side" v-model="entree.options.dressing" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="sideDressing">On side</label>
+                            </p>
+
+                          </div>
+                          <!-- End of Chicken Caesar Salad -->
+
+                          <!-- Unique option for Nashville Chicken Slider-->
+                          <div v-if="modalEntree.name == 'Nashville Sliders'">
+
+                            <!-- Select menu for heat level -->
+                            <p>
+                              <label for="heat" class="titleLabel">Heat:</label><br>
+                              <select class="form-select form-select-sm" style="width:auto;" id="heat" v-model="entree.options.heat" v-on:change="entreeValidation(entree, modalEntree)">
+                                <option value="null" disabled hidden>Please select...</option>
+                                <option>Mild</option>
+                                <option>Medium</option>
+                                <option>Hot</option>
+                                <option>Extra Hot</option>
+                              </select>
+                            </p>
+
+                            <!-- Radio option for coleslaw -->
+                            <p>
+                              <label for="coleslaw" class="titleLabel">Coleslaw:</label><br>
+                              <input class="form-check-input" type="radio" id="keepNashSlaw" value="Keep" v-model="entree.options.coleslaw" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="keepNashSlaw">keep</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="remove" value="Remove" v-model="entree.options.coleslaw" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="remove">Remove</label>
+                            </p>
+
+                            <!-- Radio option for pickles -->
+                            <p>
+                              <label for="pickles" class="titleLabel">Pickles:</label><br>
+                              <input class="form-check-input" type="radio" id="keepPickles" value="Keep" v-model="entree.options.pickles" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="keepPickles">keep</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="removePickles" value="Remove" v-model="entree.options.pickles" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="removePickles">Remove</label>
+                            </p>
+
+                            <!-- Radio option for sauce -->
+                            <p>
+                              <label for="sauce" class="titleLabel">Sauce:</label><br>
+                              <input class="form-check-input" type="radio" id="keepNashvilleSauce" value="Keep" v-model="entree.options.sauce" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="keepNashvilleSauce">keep</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="removeNashvilleSauce" value="Remove" v-model="entree.options.sauce" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="removeNashvilleSauce">Remove</label>
+                            </p>
+
+                          </div>
+                          <!-- End of Chicken Nashville Chicken Sliders-->
+
+                           <!-- Unique option for Coconut Shrimp Platter -->
+                          <div v-if="modalEntree.name == 'Coconut Shrimp Platter'">
+
+                            <!-- Select menu for sauce -->
+                            <p>
+                              <label for="sauce" class="titleLabel">Sauce:</label><br>
+                              <input class="form-check-input" type="radio" id="keepShrimpSauce" value="Keep" v-model="entree.options.sauce" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="keepShrimpSauce">keep</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="removeShrimpSauce" value="Remove" v-model="entree.options.sauce" v-on:change="entreeValidation(entree, modalEntree)">
+                              <label class="form-check-label" for="removeShrimpSauce">Remove</label>
+                            </p>
+
+                          </div>
+                          <!-- End of Coconut Shrimp Platter -->
+
+                        </div> 
+                        <!-- End of modal body content; start of footer-->
+
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" v-on:click="resetItem(entree, modalEntree)">Close</button>
+                            <!-- Add to cart button is disabled if all customization options aren't selected (default)-->
+                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="must select all options before adding to cart">
+                              <button id="disabledCartButton" class="btn" type="button" disabled>Add to Cart</button>
+                            </span>
+
+                            <!-- Add to Cart Button only appears if user selects all options -->
+                            <button id="addEntreeModal" type="button" class="btn" data-bs-dismiss="modal" hidden v-on:click="addEntreeToCart(entree, modalEntree)">Add to Cart</button>
+                          </div>          
+                      </div>
+                    </div>
+                  </div> <!-- End of modal -->
+                </div>
+              </div> <!-- End of order-card-test -->
+            </div>
+          </div> <!-- End of Row (products) -->   
+        </div> <!-- End of orderVisualContainer -->
+      </section> <!-- End of Food Section-->
+      
+      <br>
+      
+       <!-- START OF SIDES SECTION -->
+      
+      <section class="Sides">
+        
+        <div class="shadow page-subheader">
+          <h2 class="page-item-heading">Sides</h2>
+          <p>Perfect to pair with our entrees and perfect to eat on their own!</p>
+        </div>
+        <br>
+        <div class="shadow orderVisualContainer">
+          <div class="row align-items-center">
+            <div v-for="(side, index) in sides" :key="index" class="col-sm">
+              <div class="order-card-test"> <!-- Order card test -->
+                <div class="card mb-3" style="width: 18rem;">
+                  <img v-bind:src="side.image" class="card-img-top" alt="...">
+                  <!-- Card Body Content-->
+                  <div class="card-body">
+                    <h5 class="card-title">{{ side.name }}
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ side.calories }}</h6>
+                    <p class="card-text">{{ side.description }}</p>
+                    <div class="d-flex justify-content-between">
+                      <h5 class="card-text card-price">{{ side.price }}</h5>
+                      <button type="button" class="btn btn-sm btn-block btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#sideModal" v-on:click="setModalSide(side)">Edit & Add</button>
+                    </div>
+                  </div>
+                  <!-- Start of Modal -->
+                  <div class="modal fade" id="sideModal" tabindex="-1" aria-labelledby="sideModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="sideModalLabel">{{ modalSide.name }}</h5>
+                          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" v-on:click="resetItem(side, modalSide)"></button>
+                        </div>
+                        <div class="modal-body">
+                          <!-- Start of Modal body content -->
+
+                          <!-- Shared size option among all the sides -->
+                          <p>
+                            <label for="size" class="titleLabel">Size:</label><br>
+                            <input class="form-check-input" type="radio" id="small" value="small" v-model="side.options.size" v-on:change="sideValidation(side, modalSide)">
+                            <label class="form-check-label" for="small">Small</label>
+                            <br>
+                            <input class="form-check-input" type="radio" id="medium" value="medium" v-model="side.options.size" v-on:change="sideValidation(side, modalSide)">
+                            <label class="form-check-label" for="medium">Medium</label>
+                            <br>
+                            <input class="form-check-input" type="radio" id="large" value="large" v-model="side.options.size" v-on:change="sideValidation(side, modalSide)">
+                            <label class="form-check-label" for="large">Large</label>
+                          </p>
+
+                          <!-- Unique options for Chips and Salsa-->
+                          <div v-if="modalSide.name == 'Chips and Salsa'">
+
+                            <!-- Salsa option for Chips and Salsa -->
+                            <p>
+                              <label for="salsa" class="titleLabel">Salsa:</label><br>
+                              <input class="form-check-input" type="radio" id="mild" value="mild" v-model="side.options.salsa" v-on:change="sideValidation(side, modalSide)">
+                              <label class="form-check-label" for="mild">Mild</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="mediumSalsa" value="medium" v-model="side.options.salsa" v-on:change="sideValidation(side, modalSide)">
+                              <label class="form-check-label" for="mediumSalsa">Medium</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="hot" value="hot" v-model="side.options.salsa" v-on:change="sideValidation(side, modalSide)">
+                              <label class="form-check-label" for="hot">Hot</label>
+                            </p>
+
+                          </div> 
+                          <!-- End of Chips and Salsa -->
+
+                          </div> 
+                        <!-- End of modal body content; start of footer-->
+
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" v-on:click="resetItem(side, modalSide)">Close</button>
+                            <!-- Add to cart button is disabled if all customization options aren't selected (default)-->
+                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="must select all options before adding to cart">
+                              <button id="disabledSideCartButton" class="btn" type="button" disabled>Add to Cart</button>
+                            </span>
+
+                            <!-- Add to Cart Button only appears if user selects all options -->
+                            <button id="addSideModal" type="button" class="btn" data-bs-dismiss="modal" hidden v-on:click="addSideToCart(side, modalSide)">Add to Cart</button>
+                          </div>          
+                      </div>
+                    </div>
+                  </div> <!-- End of modal -->
+                </div>
+              </div> <!-- End of Order card test -->
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- END OF SIDES SECTION -->
+      
+      <br>
+
+      <!-- START OF DRINKS SECTION -->
+      
+      <section class="Drinks">
+        
+        <div class="shadow page-subheader">
+          <h2 class="page-item-heading">Drinks</h2>
+          <p>Enjoy our selection of refreshing and delicious drinks!</p>
+        </div>
+        <br>
+        <div class="shadow orderVisualContainer">
+          <div class="row align-items-center">
+            <div v-for="(drink, index) in drinks" :key="index" class="col-sm">
+              <div class="order-card-test"> <!-- Order card test -->
+                <div class="card mb-3" style="width: 18rem;">
+                  <img v-bind:src="drink.image" class="card-img-top" alt="...">
+                  <!-- Card Body Content-->
+                  <div class="card-body">
+                    <h5 class="card-title">{{ drink.name }}
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ drink.calories }}</h6>
+                    <p class="card-text">{{ drink.description }}</p>
+                    <div class="d-flex justify-content-between">
+                      <h5 class="card-text card-price">{{ drink.price }}</h5>
+                      <button type="button" class="btn btn-sm btn-block btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#drinkModal" v-on:click="setModalDrink(drink)">Edit & Add</button>
+                    </div>
+                  </div>
+                  <!-- Start of Modal -->
+                  <div class="modal fade" id="drinkModal" tabindex="-1" aria-labelledby="drinkModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="drinkModalLabel">{{ modalDrink.name }}</h5>
+                          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" v-on:click="resetItem(drink, modalDrink)"></button>
+                        </div>
+                        <div class="modal-body">
+                          <!-- Start of Modal body content -->
+
+                          <!-- Shared size option among all the drinks -->
+                          <p>
+                            <label for="size" class="titleLabel">Size:</label><br>
+                            <input class="form-check-input" type="radio" id="smallDrink" value="small" v-model="drink.options.size" v-on:change="drinkValidation(drink, modalDrink)">
+                            <label class="form-check-label" for="smallDrink">Small</label>
+                            <br>
+                            <input class="form-check-input" type="radio" id="mediumDrink" value="medium" v-model="drink.options.size" v-on:change="drinkValidation(drink, modalDrink)">
+                            <label class="form-check-label" for="mediumDrink">Medium</label>
+                            <br>
+                            <input class="form-check-input" type="radio" id="largeDrink" value="large" v-model="drink.options.size" v-on:change="drinkValidation(drink, modalDrink)">
+                            <label class="form-check-label" for="largeDrink">Large</label>
+                          </p>
+
+                          <!-- Unique options for Soft Drink -->
+                          <div v-if="modalDrink.name == 'Soft Drink'">
+
+                            <!-- Select menu for flavor -->
+                            <p>
+                              <label for="flavor" class="titleLabel">Flavor:</label><br>
+                              <select class="form-select form-select-sm" style="width:auto;" id="flavor" v-model="drink.options.flavor" v-on:change="drinkValidation(drink, modalDrink)">
+                                <option value="null" disabled hidden>Please select...</option>
+                                <option>Coke</option>
+                                <option>Diet Coke</option>
+                                <option>Dr. Pepper</option>
+                                <option>Barq's Root Beer</option>
+                                <option>Sprite</option>
+                                <option>Orange Fanta</option>
+                              </select>
+                            </p>
+
+                            <!-- Select menu for ice -->
+                            <p>
+                              <label for="ice" class="titleLabel">Ice:</label><br>
+                              <select class="form-select form-select-sm" style="width:auto;" id="ice" v-model="drink.options.ice" v-on:change="drinkValidation(drink, modalDrink)">
+                                <option value="null" disabled hidden>Please select...</option>
+                                <option>Quarter</option>
+                                <option>Half</option>
+                                <option>Three Fourths</option>
+                                <option>Full</option>
+                                <option>None</option>
+                              </select>
+                            </p>
+
+                          </div> 
+                          <!-- End of Soft Drink -->
+
+                          <!-- Unique options for Tea -->
+                          <div v-if="modalDrink.name == 'Tea'">
+
+                            <!-- Select menu for flavor -->
+                            <p>
+                              <label for="teaFlavor" class="titleLabel">Flavor:</label><br>
+                              <select class="form-select form-select-sm" style="width:auto;" id="teaFlavor" v-model="drink.options.flavor" v-on:change="drinkValidation(drink, modalDrink)">
+                                <option value="null" disabled hidden>Please select...</option>
+                                <option>Chai</option>
+                                <option>Black</option>
+                                <option>Green</option>
+                                <option>Herbal</option>
+                              </select>
+                            </p>
+
+                            <!-- Select menu for ice -->
+                            <p>
+                              <label for="ice" class="titleLabel">Ice:</label><br>
+                              <select class="form-select form-select-sm" style="width:auto;" id="teaIce" v-model="drink.options.ice" v-on:change="drinkValidation(drink, modalDrink)">
+                                <option value="null" disabled hidden>Please select...</option>
+                                <option>Quarter</option>
+                                <option>Half</option>
+                                <option>Three Fourths</option>
+                                <option>Full</option>
+                                <option>None</option>
+                              </select>
+                            </p>
+
+                          </div> 
+                          <!-- End of Tea -->
+
+                          <!-- Unique options for Lemonade -->
+                          <div v-if="modalDrink.name == 'Lemonade'">
+
+                            <!-- Select menu for ice -->
+                            <p>
+                              <label for="ice" class="titleLabel">Ice:</label><br>
+                              <select class="form-select form-select-sm" style="width:auto;" id="lemonadeIce" v-model="drink.options.ice" v-on:change="drinkValidation(drink, modalDrink)">
+                                <option value="null" disabled hidden>Please select...</option>
+                                <option>Quarter</option>
+                                <option>Half</option>
+                                <option>Three Fourths</option>
+                                <option>Full</option>
+                                <option>None</option>
+                              </select>
+                            </p>
+
+                          </div> 
+                          <!-- End of Lemonade -->
+
+                          <!-- Unique options for Milkshake -->
+                          <div v-if="modalDrink.name == 'Milkshake'">
+
+                            <!-- Flavor option for Milkshake -->
+                            <p>
+                              <label for="flavor" class="titleLabel">Flavor:</label><br>
+                              <input class="form-check-input" type="radio" id="vanilla" value="vanilla" v-model="drink.options.flavor" v-on:change="drinkValidation(drink, modalDrink)">
+                              <label class="form-check-label" for="vanilla">Vanilla</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="chocolate" value="chocolate" v-model="drink.options.flavor" v-on:change="drinkValidation(drink, modalDrink)">
+                              <label class="form-check-label" for="chocolate">Chocolate</label>
+                              <br>
+                              <input class="form-check-input" type="radio" id="strawberry" value="strawberry" v-model="drink.options.flavor" v-on:change="drinkValidation(drink, modalDrink)">
+                              <label class="form-check-label" for="strawberry">Strawberry</label>
+                            </p>
+
+                          </div> 
+                          <!-- End of Millkshake -->
+
+                          </div> 
+                        <!-- End of modal body content; start of footer-->
+
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" v-on:click="resetItem(drink, modalDrink)">Close</button>
+                            <!-- Add to cart button is disabled if all customization options aren't selected (default)-->
+                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="must select all options before adding to cart">
+                              <button id="disabledDrinkCartButton" class="btn" type="button" disabled>Add to Cart</button>
+                            </span>
+
+                            <!-- Add to Cart Button only appears if user selects all options -->
+                            <button id="addDrinkModal" type="button" class="btn" data-bs-dismiss="modal" hidden v-on:click="addDrinkToCart(drink, modalDrink)">Add to Cart</button>
+                          </div>          
+                      </div>
+                    </div>
+                  </div> <!-- End of modal -->
+                </div>
+              </div> <!-- End of Order card test -->
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- END OF DRINKS SECTION -->
+      
+    </div> <!-- End of Vue/App -->
+    
+    <br><br><br><br>
+    
+    <footer class="footer-distributed" id="contact">
+        
+      <div class="footer-left">
+        <div class="logo">
+          <a href="#"><img src="https://cdn.glitch.com/1cf6b956-b6ce-49c7-949f-2e012f4dfeb5%2F2108_logo1.png?v=1633275198243" alt="logo"></a>
+        </div>
+        <p class="footer-links">
+          <a href="#" class="link-1">Home</a>
+          <a href="#">Blog</a>
+          <a href="#">Pricing</a>
+          <a href="#">About</a>
+          <a href="#">Faq</a>
+          <a href="#Contact">Contact</a>
+        </p>
+        <p class="footer-company-name">2108 Web Development © 2021</p>
+      </div>
+
+      <div class="footer-center">
+        <div>
+          <i class="fa fa-map-marker"></i>
+          <p><span>18111 Nordhoff St</span>  Northridge, CA 91330</p>
+        </div>
+        <div>
+          <i class="fa fa-phone"></i>
+          <p>+1.555.555.5555</p>
+        </div>
+        <div>
+          <i class="fa fa-envelope"></i>
+          <p><a href="mailto:support@company.com">support@company.com</a></p>
+        </div>
+      </div>
+
+      <div class="footer-right">
+        <p class="footer-company-about">
+          <span>About Before Resturant</span>
+          Lorem ipsum dolor sit amet, consectateur adispicing elit. Fusce euismod convallis velit, eu auctor lacus vehicula sit amet.
+        </p>
+
+        <div class="footer-icons">
+          <a herf="#"><i class="fab fa-facebook-f"></i></a>
+          <a herf="#"><i class="fab fa-instagram"></i></a>
+          <a herf="#"><i class="fab fa-twitter"></i></a>
+          <a herf="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+		</footer>
+    
+    <!-- MORE IMPORTING VUE AND BOOTSTRAP -->
+    
+    <!-- Import App -->
+    <script src="./order-checkout.js"></script>
+    <script src="js/script.js"></script>
+
+    <!-- Import Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    
+    <!-- Found on Stack Overflow to get tooltip (fancy text popup on hover) to display; required JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script>
+    $(document).ready(function(){      
+      $('[data-bs-toggle="tooltip"]').tooltip();   
+    });
+    </script>
+    
+  </body>
+</html>
