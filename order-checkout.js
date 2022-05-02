@@ -1021,8 +1021,8 @@ var app = new Vue ({
         stripe.redirectToCheckout({
         lineItems: this.stripeCart,
         mode: 'payment',
-        successUrl: 'http://www.shahradharandi.online/success-order.html',
-        cancelUrl: 'http://www.shahradharandi.online/checkout.html',
+        successUrl: 'http://35.222.17.140/success-order.html',
+        cancelUrl: 'http://35.222.17.140/checkout.html',
       }).then(function (result) {
         // If `redirectToCheckout` fails due to a browser or network
         // error, display the localized error message to your customer
